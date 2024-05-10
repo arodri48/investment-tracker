@@ -17,7 +17,7 @@ def asset_factory(asset_name: str, asset_quantity: float, asset_type: str) -> As
         raise ValueError(f"Unknown asset type: {asset_type}")
 
 
-@flow
+@flow(log_prints=True)
 async def investment_calculator(portfolio_names: List[str]) -> None:
     api_block = await JSON.load("polygon-api-key")
     url = api_block.value["url"]

@@ -4,18 +4,6 @@ from typing import List
 import requests
 
 
-# def get_stock_info(self) -> List[Dict]:
-#     stock_info = []
-#     for stock in self.portfolio:
-#         api_obj = GenericApiCaller(url=f'https://api.polygon.io/v2/aggs/ticker/{stock["ticker"]}/prev?',
-#                                    headers={'content-type': 'application/json'})
-#         rsp = api_obj(method='GET', params={'adjusted': 'true', 'apiKey': self.api_key})
-#         results = rsp.json()
-#         stock_info.append({'ticker': stock['ticker'], 'allocation': stock['allocation'],
-#                            'close_price': results['results'][0]['c']})
-#     return stock_info
-
-
 class Asset(ABC):
     def __init__(self, name: str, quantity: float):
         self.name = name
