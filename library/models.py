@@ -1,6 +1,20 @@
 from abc import ABC, abstractmethod
 from typing import List
 
+import requests
+
+
+# def get_stock_info(self) -> List[Dict]:
+#     stock_info = []
+#     for stock in self.portfolio:
+#         api_obj = GenericApiCaller(url=f'https://api.polygon.io/v2/aggs/ticker/{stock["ticker"]}/prev?',
+#                                    headers={'content-type': 'application/json'})
+#         rsp = api_obj(method='GET', params={'adjusted': 'true', 'apiKey': self.api_key})
+#         results = rsp.json()
+#         stock_info.append({'ticker': stock['ticker'], 'allocation': stock['allocation'],
+#                            'close_price': results['results'][0]['c']})
+#     return stock_info
+
 
 class Asset(ABC):
     def __init__(self, name: str, quantity: float):
@@ -18,13 +32,25 @@ class Asset(ABC):
 class Stock(Asset):
     def get_asset_price(self, api_base_url: str, api_key: str) -> float:
         # Assume a real API call to get the stock price
-        return 100.0
+        response = requests.get(f'{api_base_url}/{self.name}/prev?',
+                                params={'adjusted': 'true', 'apiKey': api_key},
+                                headers={'content-type': 'application/json'})
+        if not response.ok:
+            raise Exception('Failed to get stock price')
+        results = response.json()
+        return results['results'][0]['c']
 
 
 class Crypto(Asset):
     def get_asset_price(self, api_base_url: str, api_key: str) -> float:
-        # Assume a real API call to get the crypto price
-        return 200.0
+        # Assume a real API call to get the stock price
+        response = requests.get(f'{api_base_url}/X:{self.name}USD/prev?',
+                                params={'adjusted': 'true', 'apiKey': api_key},
+                                headers={'content-type': 'application/json'})
+        if not response.ok:
+            raise Exception('Failed to get stock price')
+        results = response.json()
+        return results['results'][0]['c']
 
 
 class Portfolio:
